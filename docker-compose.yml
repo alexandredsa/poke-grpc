@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  poke-mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ash
+      MONGO_INITDB_ROOT_PASSWORD: d900a982-3e52-4f49-9aa0-73432556243f
+    ports:
+      - "27017:27017"
