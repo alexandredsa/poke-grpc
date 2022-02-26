@@ -10,7 +10,7 @@ import (
 	"github.com/alexandredsa/poke-grpc/internal/container"
 	pokeGrpc "github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/transport/grpc"
 	"github.com/joho/godotenv"
-	logRus "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -19,7 +19,6 @@ func main() {
 	if err := loadDotEnv(); err != nil {
 		log.Fatal(err)
 	}
-
 	ctx := context.Background()
 
 	lis, err := net.Listen("tcp", ":9000")
@@ -27,7 +26,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	logRus.WithField("port", "9000").Info("TCP Listening...")
+	logrus.WithField("port", "9000").Info("TCP Listening...")
 
 	dep := container.Dependencies{}
 	if err := dep.Setup(ctx); err != nil {

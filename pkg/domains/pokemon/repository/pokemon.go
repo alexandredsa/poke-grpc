@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	mongoComponent "github.com/alexandredsa/poke-grpc/internal/components/mongo"
 	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/model"
@@ -12,7 +12,7 @@ import (
 )
 
 type PokemonRepository interface {
-	InsertAll(context.Context, []model.Pokemon) error
+	InsertAll(context.Context, []*model.Pokemon) error
 	FindByFilters(context.Context, dto.Filters) ([]model.Pokemon, error)
 }
 
@@ -28,14 +28,18 @@ func NewPokemonMongoRepository(client mongoComponent.ClientI) PokemonMongoReposi
 	}
 }
 
-func (r PokemonMongoRepository) InsertAll(ctx context.Context, pokemons []model.Pokemon) error {
+func (r PokemonMongoRepository) InsertAll(ctx context.Context, pokemons []*model.Pokemon) error {
 	docs := make([]interface{}, 0, len(pokemons))
 
-	log.
-		WithFields(log.Fields{
+	logrus.
+		WithFields(logrus.Fields{
 			"slice_size": len(pokemons),
 		}).
 		Debug("InsertAll")
+
+	for _, pokemon := range pokemons {
+		docs = append(docs, pokemon)
+	}
 
 	_, err := r.collection.InsertMany(ctx, docs)
 

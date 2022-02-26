@@ -22,8 +22,7 @@ type Dependencies struct {
 	Providers  Providers
 }
 
-func (d Dependencies) Setup(ctx context.Context) error {
-
+func (d *Dependencies) Setup(ctx context.Context) error {
 	credentials := mongo.Credentials{
 		ConnectionTimeout: 10 * time.Second,
 		DBName:            os.Getenv("MONGO_DB_NAME"),
