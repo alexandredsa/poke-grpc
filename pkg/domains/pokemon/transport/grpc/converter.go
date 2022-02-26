@@ -1,6 +1,9 @@
 package grpc
 
-import "github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/model"
+import (
+	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/model"
+	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/transport/dto"
+)
 
 type PokemonGrpcConverter struct{}
 
@@ -29,4 +32,31 @@ func (converter PokemonGrpcConverter) FromModel(pokemonModel model.Pokemon) *Pok
 		Generation:     pokemonModel.Generation,
 		Legendary:      pokemonModel.Legendary,
 	}
+}
+
+func (converter PokemonGrpcConverter) FromGrpcFilters(in *PokemonFilters) dto.Filters {
+	out := dto.Filters{}
+
+	if in == nil {
+		return out
+	}
+
+	if in.Filters == nil {
+		return out
+	}
+
+	if len(in.Filters) == 0 {
+		return out
+	}
+
+	out.Filters = make([]dto.FilterRequest, len(in.Filters)-1)
+
+	for _, inFilter := range in.Filters {
+		out.Filters = append(out.Filters, dto.FilterRequest{
+			FilterKey:   inFilter.FilterKey,
+			FilterValue: inFilter.FilterValue,
+		})
+	}
+
+	return out
 }

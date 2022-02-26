@@ -8,3 +8,7 @@ type FilterRequest struct {
 type Filters struct {
 	Filters []FilterRequest
 }
+
+func (f Filters) Empty() bool {
+	return f.Filters == nil || len(f.Filters) == 0
+}

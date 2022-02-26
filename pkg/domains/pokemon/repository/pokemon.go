@@ -8,7 +8,13 @@ import (
 	mongoComponent "github.com/alexandredsa/poke-grpc/internal/components/mongo"
 	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/model"
 	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/transport/dto"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+var (
+	listDefaultLimit int64 = 100
 )
 
 type PokemonRepository interface {
@@ -46,6 +52,29 @@ func (r PokemonMongoRepository) InsertAll(ctx context.Context, pokemons []*model
 	return err
 }
 
-func (r PokemonMongoRepository) FindByFilters(ctx context.Context, filters dto.Filters) ([]model.Pokemon, error) {
-	return nil, nil
+func (r PokemonMongoRepository) FindByFilters(ctx context.Context, in dto.Filters) ([]model.Pokemon, error) {
+	filters := r.buildFilters(in)
+	opts := options.Find()
+	opts.SetLimit(listDefaultLimit)
+	cursor, err := r.collection.Find(ctx, filters, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	var pokemons []model.Pokemon
+	err = cursor.All(ctx, &pokemons)
+
+	return pokemons, err
+}
+
+func (r PokemonMongoRepository) buildFilters(in dto.Filters) bson.D {
+	filters := bson.D{}
+
+	for _, dtoFilter := range in.Filters {
+		filters = append(filters,
+			bson.E{Key: dtoFilter.FilterKey, Value: dtoFilter.FilterValue},
+		)
+	}
+
+	return filters
 }

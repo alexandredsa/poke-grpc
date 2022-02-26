@@ -26,11 +26,16 @@ func (s PokemonService) List(ctx context.Context, in *PokemonFilters) (*Pokemons
 	log.Printf("Received: %v", in)
 
 	pokemons := Pokemons{}
-	pokemons.Pokemons = make([]*Pokemon, 0)
-	pokemons.Pokemons = append(pokemons.Pokemons, &Pokemon{
-		Name: "Bulbassoro",
-		Id:   "92c5cf40-ac46-4782-b6ba-00c40e402602",
-	})
+	converter := PokemonGrpcConverter{}
+
+	out := converter.FromGrpcFilters(in)
+
+	pokemonList, err := s.repository.FindByFilters(ctx, out)
+	if err != nil {
+		return nil, err
+	}
+
+	pokemons.Pokemons = converter.FromModels(pokemonList)
 
 	return &pokemons, nil
 }
