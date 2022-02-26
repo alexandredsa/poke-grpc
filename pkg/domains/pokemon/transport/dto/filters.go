@@ -1,8 +1,9 @@
 package dto
 
 type FilterRequest struct {
-	FilterKey   string
-	FilterValue string
+	Key   string
+	Type  string
+	Value string
 }
 
 type Filters struct {

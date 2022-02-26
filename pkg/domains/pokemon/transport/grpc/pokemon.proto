@@ -25,7 +25,8 @@ message Pokemons {
 
 message PokemonFilterRequest {
     string filterKey = 1;
-    string filterValue = 2;
+    string filterType = 2;
+    string filterValue = 3;
 }
 
 message PokemonFilters {

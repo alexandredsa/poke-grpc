@@ -50,6 +50,6 @@ func loadDotEnv() error {
 		return nil
 	}
 
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	return err
 }

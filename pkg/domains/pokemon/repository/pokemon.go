@@ -72,7 +72,7 @@ func (r PokemonMongoRepository) buildFilters(in dto.Filters) bson.D {
 
 	for _, dtoFilter := range in.Filters {
 		filters = append(filters,
-			bson.E{Key: dtoFilter.FilterKey, Value: dtoFilter.FilterValue},
+			bson.E{Key: dtoFilter.Key, Value: dtoFilter.Value},
 		)
 	}
 
