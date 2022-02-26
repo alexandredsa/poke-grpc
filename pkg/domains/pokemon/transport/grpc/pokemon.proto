@@ -1,0 +1,37 @@
+syntax = "proto3";
+option go_package = ".;grpc";
+
+package grpc;
+
+message Pokemon {
+  string id = 1;
+  string name = 2;
+  string type1 = 3;
+  string type2 = 4;
+  int32 total = 5;
+  int32 hp = 6;
+  int32 attack = 7;
+  int32 defense = 8;
+  int32 specialAttack = 9;
+  int32 specialDefense = 10;
+  int32 speed = 11;
+  int32 generation = 12;
+  bool legendary = 13;
+}
+
+message Pokemons {
+  repeated Pokemon pokemons = 1;
+}
+
+message PokemonFilterRequest {
+    string filterKey = 1;
+    string filterValue = 2;
+}
+
+message PokemonFilters {
+  repeated PokemonFilterRequest filters = 1;
+}
+
+service PokemonService {
+  rpc List(PokemonFilters) returns (Pokemons) {}
+}
