@@ -9,6 +9,7 @@ import (
 	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/model"
 	"github.com/alexandredsa/poke-grpc/pkg/domains/pokemon/transport/dto"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -67,13 +68,29 @@ func (r PokemonMongoRepository) FindByFilters(ctx context.Context, in dto.Filter
 	return pokemons, err
 }
 
+func (r PokemonMongoRepository) buildExactFilter(in dto.FilterRequest) bson.E {
+	return bson.E{Key: in.Key, Value: in.Value}
+}
+
+func (r PokemonMongoRepository) buildRegexFilter(in dto.FilterRequest) bson.E {
+	return bson.E{
+		Key: in.Key,
+		Value: bson.D{
+			{Key: "$regex", Value: primitive.Regex{Pattern: in.Value, Options: "i"}},
+		},
+	}
+}
+
 func (r PokemonMongoRepository) buildFilters(in dto.Filters) bson.D {
 	filters := bson.D{}
 
 	for _, dtoFilter := range in.Filters {
-		filters = append(filters,
-			bson.E{Key: dtoFilter.Key, Value: dtoFilter.Value},
-		)
+		switch dtoFilter.Type {
+		case dto.FilterExactType:
+			filters = append(filters, r.buildExactFilter(dtoFilter))
+		case dto.FilterRegexType:
+			filters = append(filters, r.buildRegexFilter(dtoFilter))
+		}
 	}
 
 	return filters

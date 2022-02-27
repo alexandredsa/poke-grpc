@@ -49,12 +49,17 @@ func (converter PokemonGrpcConverter) FromGrpcFilters(in *PokemonFilters) dto.Fi
 		return out
 	}
 
-	out.Filters = make([]dto.FilterRequest, len(in.Filters)-1)
+	out.Filters = make([]dto.FilterRequest, 0, len(in.Filters))
 
 	for _, inFilter := range in.Filters {
+		fType, ok := dto.ParseFilterTypeFromString(inFilter.FilterType)
+		if !ok {
+			fType = dto.FilterRegexType
+		}
+
 		out.Filters = append(out.Filters, dto.FilterRequest{
 			Key:   inFilter.FilterKey,
-			Type:  inFilter.FilterType,
+			Type:  fType,
 			Value: inFilter.FilterValue,
 		})
 	}
