@@ -6,7 +6,6 @@ This project is a PoC(Proof of Concept) of a gRPC server implemented using Go.
 ## Data
 To enrich this implementation a [Pokemon](https://www.kaggle.com/abcsds/pokemon/version/2) dataset was downloaded from Kaggle. The application seed the database (Mongo) using the csv file.
 
-
 ## Methods
 
 ### List
@@ -42,3 +41,21 @@ To enrich this implementation a [Pokemon](https://www.kaggle.com/abcsds/pokemon/
   ]
 }
 ```
+
+---
+
+## How can I run it?
+
+---
+**NOTE:**
+
+You must have an environment with: `Go`, `Docker`, `Docker Compose`, and maybe some grpc client to check it out.
+I personally recommend [grpcui](https://github.com/fullstorydev/grpcui) (at least for now since I don't have so much experience with gRPC).
+
+---
+
+You can run the application with `development` configuration (that is the project's default using `.env` file's located at project's root).
+
+1. Run `docker-compose up -d` to provision local MongoDB.
+2. To seed the bank with `pokemon.csv` run: `make seed-db`
+3. And finally, to run the app: `make run`
