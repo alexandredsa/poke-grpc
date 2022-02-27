@@ -27,7 +27,7 @@ func (r PokemonCSVReader) Load(path string) ([]*model.Pokemon, error) {
 
 	pokemons := make([]*model.Pokemon, 0)
 
-	if err := gocsv.UnmarshalFile(datasetFile, &pokemons); err != nil { // Load clients from file
+	if err := gocsv.UnmarshalFile(datasetFile, &pokemons); err != nil {
 		return nil, err
 	}
 
